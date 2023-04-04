@@ -3,6 +3,7 @@
 # dependencies
 
 node_modules
+/fe/node_modules
 /.pnp
 .pnp.js
 
