@@ -115,6 +115,7 @@ const SideDrawer = () => {
                 name={user.name}
                 src={user.pic}
               />
+              <Text>{user.name}</Text>
             </MenuButton>
             <MenuList>
               <MenuItem onClick={logoutHandler}>Logout</MenuItem>
