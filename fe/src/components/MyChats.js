@@ -9,6 +9,7 @@ import GroupChatModal from "./miscellaneous/GroupChatModal";
 const MyChats = ({ fetchAgain }) => {
   const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
   const [loggedUser, setLoggedUser] = useState();
+
   const fetchChats = async () => {
     try {
       const config = {
@@ -18,7 +19,9 @@ const MyChats = ({ fetchAgain }) => {
         },
       };
       // get all chats of loggedin user
-      const { data } = await axios.get("api/chat", config);
+      const { data } = await axios.get("/api/chat", config);
+      // console.log(data);
+
       setChats(data);
     } catch (error) {
       console.log(error);
@@ -37,7 +40,7 @@ const MyChats = ({ fetchAgain }) => {
       alignItems="center"
       p={3}
       bg="white"
-      w={{ base: "100%", md: "31%" }}
+      w="100%"
       borderRadius="lg"
       borderWidth="1px"
     >
@@ -83,7 +86,7 @@ const MyChats = ({ fetchAgain }) => {
               >
                 <Text>
                   {!chat.isGroupChat
-                    ? getSender(loggedUser, chat.users)
+                    ? getSender(user, chat.users)
                     : chat.chatName}
                 </Text>
                 {chat.latestMessage && (
