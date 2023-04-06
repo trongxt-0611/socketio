@@ -15,15 +15,18 @@ import axios from "axios";
 import "./styles.css";
 import ProfileModal from "./miscellaneous/ProfileModal";
 import ScrollableChat from "./ScrollableChat";
+import io from "socket.io-client";
 
 const ENDPOINT = "http://localhost:5000";
+let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
+  const { selectedChat, setSelectedChat, user, isNewMessage, setIsNewMessage } =
+    ChatState();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
-  const [typing, setTyping] = useState(false);
+  const [isSocketConected, setIsSocketConnected] = useState(false);
   const [istyping, setIsTyping] = useState(false);
 
   const fetchMessages = async () => {
@@ -45,6 +48,8 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
         // console.log(data);
         setMessages(data);
         setLoading(false);
+
+        socket.emit("join chat", selectedChat._id);
       }
     } catch (error) {
       setLoading(false);
@@ -52,8 +57,32 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
   };
 
   useEffect(() => {
+    socket = io(ENDPOINT);
+    socket.emit("setup", user);
+    socket.on("connection", () => {
+      setIsSocketConnected(true);
+    });
+  }, []);
+
+  useEffect(() => {
     fetchMessages();
+    selectedChatCompare = selectedChat;
   }, [selectedChat]);
+
+  useEffect(() => {
+    socket.on("message recieved", (newRecievedMess) => {
+      if (
+        !selectedChatCompare ||
+        selectedChatCompare._id !== newRecievedMess.chat._id
+      ) {
+        //new message from another room
+      } else {
+        setMessages([...messages, newRecievedMess]);
+      }
+      setIsNewMessage(!isNewMessage);
+    });
+  });
+
   const sendMessage = async (event) => {
     if (event.key === "Enter" && newMessage) {
       try {
@@ -73,6 +102,7 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
           config
         );
         // console.log(data);
+        socket.emit("new message", data);
         setMessages([...messages, data]);
       } catch (error) {
         alert(error);

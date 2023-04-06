@@ -141,7 +141,7 @@ const UpdateGroupChatModal = ({ fetchAgain, setFetchAgain, fetchMessages }) => {
     <>
       <Button d={{ base: "flex" }} onClick={onOpen}>
         {" "}
-        View
+        Group Info
       </Button>
 
       <Modal onClose={onClose} isOpen={isOpen} isCentered>
