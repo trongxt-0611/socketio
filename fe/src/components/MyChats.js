@@ -7,8 +7,7 @@ import { getSender } from "../config/ChatLogics";
 import GroupChatModal from "./miscellaneous/GroupChatModal";
 
 const MyChats = ({ fetchAgain }) => {
-  const { selectedChat, setSelectedChat, user, chats, setChats, isNewMessage } =
-    ChatState();
+  const { selectedChat, setSelectedChat, user, chats, setChats } = ChatState();
   const [loggedUser, setLoggedUser] = useState();
 
   const fetchChats = async () => {
@@ -32,7 +31,7 @@ const MyChats = ({ fetchAgain }) => {
   useEffect(() => {
     setLoggedUser(JSON.parse(localStorage.getItem("userInfo")));
     fetchChats();
-  }, [fetchAgain, isNewMessage]);
+  }, [fetchAgain]);
 
   return (
     <Box

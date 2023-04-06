@@ -21,8 +21,7 @@ const ENDPOINT = "http://localhost:5000";
 let socket, selectedChatCompare;
 
 const SingleChat = ({ fetchAgain, setFetchAgain }) => {
-  const { selectedChat, setSelectedChat, user, isNewMessage, setIsNewMessage } =
-    ChatState();
+  const { selectedChat, setSelectedChat, user } = ChatState();
   const [loading, setLoading] = useState(false);
   const [messages, setMessages] = useState([]);
   const [newMessage, setNewMessage] = useState("");
@@ -79,7 +78,6 @@ const SingleChat = ({ fetchAgain, setFetchAgain }) => {
       } else {
         setMessages([...messages, newRecievedMess]);
       }
-      setIsNewMessage(!isNewMessage);
     });
   });
 
